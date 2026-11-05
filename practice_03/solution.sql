@@ -231,12 +231,11 @@ where salary > (select avg(salary) from employees)
 order by salary desc;
 
 --Завдання 5.2. 
-select d.department_id, d.department_name
-from departments d
-join employees e on e.employee_id = d.department_id 
-where d.department_id in (
-	select e2.department_id
-	from employees e2  
+select department_id, department_name
+from departments
+where department_id in (
+	select department_id
+	from employees  
 	group by department_id 
 	having sum(salary) > 100000
 )
@@ -267,11 +266,10 @@ order by salary desc;
 --Завдання 5.5.
 select d.department_id, d.department_name
 from departments d 
-left join employees e on d.department_id = e.department_id
-where e.employee_id not in (
-	select e.employee_id 
-	from employees e2 
-	where e.employee_id is not null)
+where not exists (
+	select 1 
+	from employees as e 
+	where e.department_id = d.department_id)
 order by d.department_id;
 
 --Завдання 5.6.
